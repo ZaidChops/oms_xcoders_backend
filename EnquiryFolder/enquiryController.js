@@ -1,12 +1,11 @@
-// const Enquiry =require("../models/enquiryModel")
 const mongoose = require('mongoose');
 const Enquiry = require('./enquiryModel');
 const { Counter } = require("../models/counterModel");
 
 const enquiry = async (req, res) => {
     try {
-        const { name, email, course, contactNo, courseFees, finalizeFees,
-            academicQualifaction, referral, yearOfPassing, sourceOfEnquiry, status, demo , followUp} = req.body;
+        const { name, email, courseName, courseCategory, courseFee, contact, finalizeFees,
+            academicQualification, referralBy, yearOfPassing, sourceOfEnquiry, status, demo, followUp } = req.body;
 
         const counter = await Counter.findOneAndUpdate(
             { name: "enquiryId" },
@@ -16,9 +15,8 @@ const enquiry = async (req, res) => {
 
         const enquiryId = `XCE${String(counter.seq).padStart(3, "0")}`;
         const enquiry = new Enquiry({
-            enquiryId, name, email, course, contactNo, courseFees,
-            finalizeFees,
-            academicQualifaction, yearOfPassing, sourceOfEnquiry, referral, status, demo, followUp
+            enquiryId, name, email, courseName, courseCategory, courseFee, contact, finalizeFees,
+            academicQualification, referralBy, yearOfPassing, sourceOfEnquiry, status, demo, followUp
         })
         await enquiry.save();
         if (enquiry) {
@@ -40,12 +38,12 @@ const enquiry = async (req, res) => {
 const Editenquiry = async (req, res) => {
     try {
         const { id } = req.params
-        const { name, email, course, contactNo, courseFees, finalizeFees,
-            academicQualifaction, yearOfPassing, sourceOfEnquiry, referral, status, demo , followUp} = req.body
+        const { name, email, courseName, courseCategory, courseFee, contact, finalizeFees,
+            academicQualification, referralBy, yearOfPassing, sourceOfEnquiry, status, demo, followUp } = req.body
         console.log(req.body)
         const enquiry = await Enquiry.findByIdAndUpdate(id, {
-            name, email, course, contactNo, courseFees, finalizeFees,
-            academicQualifaction, yearOfPassing, sourceOfEnquiry,  referral,status, demo, followUp
+            name, email, courseName, courseCategory, courseFee, contact, finalizeFees,
+            academicQualification, referralBy, yearOfPassing, sourceOfEnquiry, status, demo, followUp
         }, { new: true })
         res.status(200).json({
             success: true,
@@ -85,6 +83,7 @@ const fetchEnquiry = async (req, res) => {
 module.exports = {
     enquiry, Editenquiry, fetchEnquiry
 }
+
 
 
 

@@ -6,6 +6,24 @@ const EnquirySchema = new Schema({
     unique: true,
     default: "XCE",
   },
+  courseName: {
+    type: String,
+    required: [true, "mention the course you wish to join"],
+  },
+  courseCategory: {
+    type: String,
+    required: [true, "Course Category is required."],
+  },
+
+  courseFee: {
+    type: Number,
+
+  },
+
+  finalizeFees: {
+    type: Number,
+  },
+
   name: {
     type: String,
     required: [true, "Name is required."],
@@ -14,11 +32,11 @@ const EnquirySchema = new Schema({
     type: String,
     required: [true, "email is required."],
   },
-  contactNo: {
+  contact: {
     type: String,
     required: [true, "Mobile Number is required."],
   },
-  academicQualifaction: {
+  academicQualification: {
     type: String,
     required: [true, "Academic Qualification is required."],
   },
@@ -28,22 +46,9 @@ const EnquirySchema = new Schema({
   sourceOfEnquiry: {
     type: String,
   },
-  referral: {
+  referralBy: {
     type: String
-  }
-,
-  course: {
-    type: String,
-    required: [true, "mention the course you wish to join"],
   },
-  courseFees: {
-    type: Number,
-
-  },
-  finalizeFees: {
-    type: Number,
-  },
-
   status: {
     type: String,
     default: "Interested",
