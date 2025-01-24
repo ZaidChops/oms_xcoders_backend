@@ -1,7 +1,7 @@
 const createHttpError = require("http-errors");
 
 const cloudinary = require("../config/cloudinary.js").v2;
-const Admission = require("./admissionModel.js");
+const Admission = require("./model.js");
 const { Counter } = require("../models/counterModel.js");
 
 const createAdmission = async (req, res, next) => {
