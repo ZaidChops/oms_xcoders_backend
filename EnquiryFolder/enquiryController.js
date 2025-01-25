@@ -3,9 +3,23 @@ const Enquiry = require("./enquiryModel");
 const { Counter } = require("../models/counterModel");
 
 const enquiry = async (req, res) => {
-    try {
-        const { name, email, courseName, courseCategory, courseFee, contact, finalizeFees,
-            academicQualification, referralBy, yearOfPassing, sourceOfEnquiry, status, demo, followUp } = req.body;
+  try {
+    const {
+      name,
+      email,
+      courseName,
+      courseCategory,
+      courseFee,
+      contact,
+      finalizeFees,
+      academicQualification,
+      referralBy,
+      yearOfPassing,
+      sourceOfEnquiry,
+      status,
+      demo,
+      followUp,
+    } = req.body;
 
     const counter = await Counter.findOneAndUpdate(
       { name: "enquiryId" },
@@ -13,19 +27,31 @@ const enquiry = async (req, res) => {
       { new: true, upsert: true }
     );
 
-        const enquiryId = `XCE${String(counter.seq).padStart(3, "0")}`;
-        const enquiry = new Enquiry({
-            enquiryId, name, email, courseName, courseCategory, courseFee, contact, finalizeFees,
-            academicQualification, referralBy, yearOfPassing, sourceOfEnquiry, status, demo, followUp
-        })
-        await enquiry.save();
-        if (enquiry) {
-            res.status(200).json({
-                success: true,
-                message: "Enquiry save successfully",
-                enquiryData: enquiry
-            })
-        }
+    const enquiryId = `XCE${String(counter.seq).padStart(3, "0")}`;
+    const enquiry = new Enquiry({
+      enquiryId,
+      name,
+      email,
+      courseName,
+      courseCategory,
+      courseFee,
+      contact,
+      finalizeFees,
+      academicQualification,
+      referralBy,
+      yearOfPassing,
+      sourceOfEnquiry,
+      status,
+      demo,
+      followUp,
+    });
+    await enquiry.save();
+    if (enquiry) {
+      res.status(200).json({
+        success: true,
+        message: "Enquiry save successfully",
+        enquiryData: enquiry,
+      });
     }
   } catch (error) {
     res.status(500).json({
@@ -36,31 +62,57 @@ const enquiry = async (req, res) => {
 };
 
 const Editenquiry = async (req, res) => {
-    try {
-        const { id } = req.params
-        const { name, email, courseName, courseCategory, courseFee, contact, finalizeFees,
-            academicQualification, referralBy, yearOfPassing, sourceOfEnquiry, status, demo, followUp } = req.body
-        console.log(req.body)
-        const enquiry = await Enquiry.findByIdAndUpdate(id, {
-            name, email, courseName, courseCategory, courseFee, contact, finalizeFees,
-            academicQualification, referralBy, yearOfPassing, sourceOfEnquiry, status, demo, followUp
-        }, { new: true })
-        res.status(200).json({
-            success: true,
-            message: "Enquiry updated successfully",
-            enquiry
-        })
-    }
-    catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        })
-
-    }
-
-}
-
+  try {
+    const { id } = req.params;
+    const {
+      name,
+      email,
+      courseName,
+      courseCategory,
+      courseFee,
+      contact,
+      finalizeFees,
+      academicQualification,
+      referralBy,
+      yearOfPassing,
+      sourceOfEnquiry,
+      status,
+      demo,
+      followUp,
+    } = req.body;
+    console.log(req.body);
+    const enquiry = await Enquiry.findByIdAndUpdate(
+      id,
+      {
+        name,
+        email,
+        courseName,
+        courseCategory,
+        courseFee,
+        contact,
+        finalizeFees,
+        academicQualification,
+        referralBy,
+        yearOfPassing,
+        sourceOfEnquiry,
+        status,
+        demo,
+        followUp,
+      },
+      { new: true }
+    );
+    res.status(200).json({
+      success: true,
+      message: "Enquiry updated successfully",
+      enquiry,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 const fetchEnquiry = async (req, res) => {
   try {
@@ -82,13 +134,3 @@ module.exports = {
   Editenquiry,
   fetchEnquiry,
 };
-    enquiry, Editenquiry, fetchEnquiry
-}
-
-
-
-
-
-
-
-
