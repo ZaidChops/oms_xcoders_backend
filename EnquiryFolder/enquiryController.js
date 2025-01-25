@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Enquiry = require("./enquiryModel");
-const { Counter } = require("../models/counterModel");
+const Counter = require("../models/counterModel");
 
 const enquiry = async (req, res) => {
   try {
@@ -49,14 +49,15 @@ const enquiry = async (req, res) => {
     if (enquiry) {
       res.status(200).json({
         success: true,
-        message: "Enquiry save successfully",
+        message: "Enquiry saved successfully",
         enquiryData: enquiry,
       });
     }
   } catch (error) {
+    console.error("Error saving enquiry:", error); // Log the actual error
     res.status(500).json({
       success: false,
-      message: "wrong",
+      message: error.message || "An error occurred while saving the enquiry.",
     });
   }
 };
@@ -107,6 +108,7 @@ const Editenquiry = async (req, res) => {
       enquiry,
     });
   } catch (error) {
+    console.error("Error updating enquiry:", error); // Log the actual error
     res.status(500).json({
       success: false,
       message: error.message,
@@ -122,6 +124,7 @@ const fetchEnquiry = async (req, res) => {
       enquiry,
     });
   } catch (error) {
+    console.error("Error fetching enquiries:", error); // Log the actual error
     res.status(500).json({
       success: false,
       message: error.message,
