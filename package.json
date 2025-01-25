@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "server": "node BACKEND/server.js",
-    "dev": "nodemon BACKEND/server.js"
+    "server": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "type": "commonjs",
