@@ -4,11 +4,12 @@ const Counter = require("../models/counterModel.js")
 
 const getAllCourses = async (req, res) => {
   try {
-    const courses = await Course.find({});
+    const courses = await Course.find({})
 
     return res
       .status(200)
-      .json({ success: true, messsage: "Courses fetch ", data: courses });
+      .json({ success: true, messsage: "Courses fetch ",
+        courses });
   } catch (error) {
     // next(new ErrorHandler(500, "Error occurs while getting courses.", error));
     res.status(500).json({
@@ -35,7 +36,8 @@ const createCourse = async (req, res, next) => {
       { new: true, upsert: true }
     );
 
-    const courseId = `XCE${String(counter.seq).padStart(3, "0")}`;
+    const courseId = `XCC${String(counter.seq).padStart(3, "0")}`;
+    // console.log(courseId)
 
     // Create a new course
     const course = await Course.create({
@@ -49,7 +51,7 @@ const createCourse = async (req, res, next) => {
     return res.status(201).json({
       success: true,
       message: "Course created Successfully",
-      course,
+      data:course,
     });
   } catch (error) {
     // next(new ExpressErrorHandler(500, "Error creating course.", error));
@@ -110,7 +112,7 @@ const updateCourseById = async (req, res, next) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Course Update Successfully", course });
+      .json({ success: true, message: "Course Update Successfully", data:course });
   } catch (error) {
     //   next(new ExpressErrorHandler(500, "Error while Update course", error));
     res.status(500).json({
@@ -133,7 +135,7 @@ const deleteCourseById = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Course deleted successfully",
-      course,
+      data:course,
     });
   } catch (error) {
     // next(new ExpressErrorHandler(500, "Error on deleting course", error));
