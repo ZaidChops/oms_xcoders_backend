@@ -1,5 +1,5 @@
 const Course = require("./model.js");
-const Counter = require("../models/counterModel.js")
+const Counter = require("../models/counterModel.js");
 // const ExpressErrorHandler = require("../middleware/ExpressErrorHandler.js");
 
 const getAllCourses = async (req, res) => {
@@ -63,6 +63,8 @@ const createCourse = async (req, res, next) => {
 const getCourseById = async (req, res, next) => {
   try {
     const { courseId } = req.params;
+
+    console.log(courseId);
 
     const course = await Course.findOne({ courseId });
 
@@ -144,10 +146,68 @@ const deleteCourseById = async (req, res, next) => {
   }
 };
 
+const getFeesData = async (req, res) => {
+  const { name, category } = req.body;
+
+  try {
+    const course = await Course.findOne({ name, category });
+    console.log(course);
+
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found " });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Course fee get successfully",
+      fee: course.fee,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getCourseNames = async (req, res) => {
+  const category = req.body;
+  console.log(category);
+
+  try {
+    const courses = await Course.find(category);
+
+    if (!courses) {
+      return res.status(404).json({
+        success: false,
+        message: "Course category or course name not found ",
+      });
+    }
+    const courseNames = courses.map((course) => course.name);
+
+    console.log(courseNames);
+
+    return res.status(200).json({
+      success: true,
+      message: "all Course name get successfully",
+      courseNames: courseNames,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   getAllCourses,
   getCourseById,
   createCourse,
   updateCourseById,
   deleteCourseById,
+  getFeesData,
+  getCourseNames,
 };
