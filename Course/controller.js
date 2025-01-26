@@ -9,7 +9,7 @@ const getAllCourses = async (req, res) => {
     return res
       .status(200)
       .json({ success: true, messsage: "Courses fetch ",
-        courses });
+        courses:courses });
   } catch (error) {
     // next(new ErrorHandler(500, "Error occurs while getting courses.", error));
     res.status(500).json({
@@ -21,10 +21,10 @@ const getAllCourses = async (req, res) => {
 
 const createCourse = async (req, res, next) => {
   try {
-    const { name, category, courseDuration, fee } = req.body;
+    const { courseName, courseCategory, courseDuration, courseFee, courseDiscount } = req.body;
 
     // Validate required fields
-    if (!name || !category || !courseDuration || !fee) {
+    if (!courseName || !courseCategory || !courseDuration || !courseFee) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required." });
@@ -42,16 +42,17 @@ const createCourse = async (req, res, next) => {
     // Create a new course
     const course = await Course.create({
       courseId,
-      name,
-      category,
+      courseName,
+      courseCategory,
       courseDuration,
-      fee,
+      courseFee,
+      courseDiscount
     });
 
     return res.status(201).json({
       success: true,
       message: "Course created Successfully",
-      data:course,
+      course:course,
     });
   } catch (error) {
     // next(new ExpressErrorHandler(500, "Error creating course.", error));
@@ -114,7 +115,7 @@ const updateCourseById = async (req, res, next) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Course Update Successfully", data:course });
+      .json({ success: true, message: "Course Update Successfully", course:course });
   } catch (error) {
     //   next(new ExpressErrorHandler(500, "Error while Update course", error));
     res.status(500).json({
@@ -137,7 +138,7 @@ const deleteCourseById = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Course deleted successfully",
-      data:course,
+      course:course,
     });
   } catch (error) {
     // next(new ExpressErrorHandler(500, "Error on deleting course", error));
@@ -149,10 +150,10 @@ const deleteCourseById = async (req, res, next) => {
 };
 
 const getFeesData = async (req, res) => {
-  const { name, category } = req.body;
+  const { courseName, courseCategory } = req.body;
 
   try {
-    const course = await Course.findOne({ name, category });
+    const course = await Course.findOne({ courseName, courseCategory });
     console.log(course);
 
     if (!course) {
@@ -164,7 +165,7 @@ const getFeesData = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Course fee get successfully",
-      fee: course.fee,
+      courseFee: course.courseFee,
     });
   } catch (error) {
     res.status(500).json({
@@ -175,11 +176,11 @@ const getFeesData = async (req, res) => {
 };
 
 const getCourseNames = async (req, res) => {
-  const category = req.body;
-  console.log(category);
+  const courseCategory = req.body;
+  console.log(courseCategory);
 
   try {
-    const courses = await Course.find(category);
+    const courses = await Course.find(courseCategory);
 
     if (!courses) {
       return res.status(404).json({
@@ -187,7 +188,7 @@ const getCourseNames = async (req, res) => {
         message: "Course category or course name not found ",
       });
     }
-    const courseNames = courses.map((course) => course.name);
+    const courseNames = courses.map((course) => course.courseName);
 
     console.log(courseNames);
 
