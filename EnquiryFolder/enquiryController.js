@@ -1,7 +1,6 @@
-// const Enquiry =require("../models/enquiryModel")
-const mongoose = require("mongoose");
-const Enquiry = require("./enquiryModel");
-const { Counter } = require("../models/counterModel");
+const mongoose = require('mongoose');
+const Enquiry = require('./enquiryModel');
+const Counter = require("../models/counterModel");
 
 const enquiry = async (req, res) => {
   try {
@@ -113,19 +112,20 @@ const Editenquiry = async (req, res) => {
 };
 
 const fetchEnquiry = async (req, res) => {
-  try {
-    const enquiry = await Enquiry.find();
-    res.status(200).json({
-      success: true,
-      enquiry,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-  }
-};
+    try {
+        const enquiry = await Enquiry.find();
+        res.status(200).json({
+            success: true,
+            enquiry
+        });
+    } catch (error) {
+        console.error("Error fetching enquiries:", error); // Log the actual error
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+}
 
 module.exports = {
   enquiry,

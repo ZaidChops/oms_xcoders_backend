@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 
@@ -20,6 +21,6 @@ router
   .route("/:courseId")
   .get(getCourseById)
   .put(updateCourseById)
-  .delete(deleteCourseById);
+.delete(deleteCourseById);
 
 module.exports = router;
