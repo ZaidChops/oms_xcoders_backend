@@ -7,29 +7,34 @@ const courseSchema = new Schema(
       unique: true,
       default: "XCC",
     },
-    name: {
+    courseName: {
       type: String,
       required: [true, "Name is required."],
       trim: true,
     },
-    category: {
+    courseNategory: {
       type: String,
       enum: [
         "Job Guaranted Program",
         "Mastery Program",
+        "MNC Expert Program",
         "Foundation Program",
         "IPB Program", //Interview Preparation Bootcamp
-        "Crash Courses",
+        "Crash Courses Program",
       ],
       required: [true, "Category is required."],
     },
+    
     courseDuration: {
       type: String,
       required: true,
     },
-    fee: {
+    courseFee: {
       type: Number,
       required: true,
+    },
+    courseDiscount: {
+      type: Number
     },
   },
   { timestamps: true }
