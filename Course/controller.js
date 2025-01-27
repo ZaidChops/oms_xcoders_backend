@@ -1,5 +1,5 @@
 const Course = require("./model.js");
-const Counter = require("../models/counterModel.js")
+const Counter = require("../models/counterModel.js");
 // const ExpressErrorHandler = require("../middleware/ExpressErrorHandler.js");
 
 const getAllCourses = async (req, res) => {
@@ -9,7 +9,7 @@ const getAllCourses = async (req, res) => {
     return res
       .status(200)
       .json({ success: true, messsage: "Courses fetch ",
-        courses });
+        courses:courses });
   } catch (error) {
     // next(new ErrorHandler(500, "Error occurs while getting courses.", error));
     res.status(500).json({
@@ -21,10 +21,10 @@ const getAllCourses = async (req, res) => {
 
 const createCourse = async (req, res, next) => {
   try {
-    const { name, category, courseDuration, fee } = req.body;
+    const { courseName, courseCategory, courseDuration, courseFee, courseDiscount } = req.body;
 
     // Validate required fields
-    if (!name || !category || !courseDuration || !fee) {
+    if (!courseName || !courseCategory || !courseDuration || !courseFee) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required." });
@@ -42,16 +42,17 @@ const createCourse = async (req, res, next) => {
     // Create a new course
     const course = await Course.create({
       courseId,
-      name,
-      category,
+      courseName,
+      courseCategory,
       courseDuration,
-      fee,
+      courseFee,
+      courseDiscount
     });
 
     return res.status(201).json({
       success: true,
       message: "Course created Successfully",
-      data:course,
+      course:course,
     });
   } catch (error) {
     // next(new ExpressErrorHandler(500, "Error creating course.", error));
@@ -65,6 +66,8 @@ const createCourse = async (req, res, next) => {
 const getCourseById = async (req, res, next) => {
   try {
     const { courseId } = req.params;
+
+    console.log(courseId);
 
     const course = await Course.findOne({ courseId });
 
@@ -112,7 +115,7 @@ const updateCourseById = async (req, res, next) => {
 
     return res
       .status(200)
-      .json({ success: true, message: "Course Update Successfully", data:course });
+      .json({ success: true, message: "Course Update Successfully", course:course });
   } catch (error) {
     //   next(new ExpressErrorHandler(500, "Error while Update course", error));
     res.status(500).json({
@@ -135,10 +138,66 @@ const deleteCourseById = async (req, res, next) => {
     return res.status(200).json({
       success: true,
       message: "Course deleted successfully",
-      data:course,
+      course:course,
     });
   } catch (error) {
     // next(new ExpressErrorHandler(500, "Error on deleting course", error));
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getFeesData = async (req, res) => {
+  const { courseName, courseCategory } = req.body;
+
+  try {
+    const course = await Course.findOne({ courseName, courseCategory });
+    console.log(course);
+
+    if (!course) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found " });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Course fee get successfully",
+      courseFee: course.courseFee,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const getCourseNames = async (req, res) => {
+  const courseCategory = req.body;
+  console.log(courseCategory);
+
+  try {
+    const courses = await Course.find(courseCategory);
+
+    if (!courses) {
+      return res.status(404).json({
+        success: false,
+        message: "Course category or course name not found ",
+      });
+    }
+    const courseNames = courses.map((course) => course.courseName);
+
+    console.log(courseNames);
+
+    return res.status(200).json({
+      success: true,
+      message: "all Course name get successfully",
+      courseNames: courseNames,
+    });
+  } catch (error) {
     res.status(500).json({
       success: false,
       message: error.message,
@@ -152,4 +211,6 @@ module.exports = {
   createCourse,
   updateCourseById,
   deleteCourseById,
+  getFeesData,
+  getCourseNames,
 };
