@@ -1,8 +1,7 @@
 const express = require("express");
 const connectDB = require("./dbConfig/db");
-const bodyParser = require("body-parser");
 
-const config = require("./config/config");
+// const config = require("./config/config");
 const cors = require("cors");
 const colors = require("colors");
 const { rootRouter } = require("./routes/rootRouter");
@@ -12,8 +11,8 @@ const app = express();
 const PORT = process.env.PORT || 8100;
 connectDB();
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cors());
 
 app.use("/api/v1", rootRouter)
