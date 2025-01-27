@@ -127,7 +127,7 @@ const updateCourseById = async (req, res, next) => {
 
 const deleteCourseById = async (req, res, next) => {
   try {
-    const { courseId } = req.params();
+    const { courseId } = req.params;
     const course = await Course.findOneAndDelete({ courseId });
     if (!courseId) {
       return res
