@@ -14,8 +14,8 @@ const {
 
 router.route("/").get(getAllCourses).post(createCourse);
 
-router.route("/getCoursesByCategory").get(getCourseNames);
 router.route("/feeFilter").get(getFeesData);
+router.route("/getCoursesByCategory").get(getCourseNames);
 
 router
   .route("/:courseId")

@@ -1,4 +1,3 @@
-
 const { Schema, model } = require("mongoose");
 const EnquirySchema = new Schema({
   enquiryId: {
@@ -12,12 +11,15 @@ const EnquirySchema = new Schema({
   },
   courseCategory: {
     type: String,
-    required: [true, "Course Category is required."],
+    required: [true, "Course Category is required"],
   },
-
+  courseDuration: {
+    type: String,
+    require: [true, "Course Duration required"],
+  },
   courseFee: {
     type: Number,
-
+    require: [true, "Course fee required"],
   },
 
   finalizeFees: {
@@ -41,18 +43,17 @@ const EnquirySchema = new Schema({
     required: [true, "Academic Qualification is required."],
   },
   yearOfPassing: {
-    type: String
+    type: String,
   },
   sourceOfEnquiry: {
     type: String,
   },
   referralBy: {
-    type: String
+    type: String,
   },
   status: {
     type: String,
     default: "Interested",
-
   },
   demo: {
     type: String,
@@ -61,7 +62,6 @@ const EnquirySchema = new Schema({
   followUp: {
     type: String,
   },
-
 });
 
 module.exports = model("Enquiry", EnquirySchema);

@@ -90,6 +90,7 @@ const Editenquiry = async (req, res) => {
         courseName,
         courseCategory,
         courseFee,
+        courseDuration,
         contact,
         finalizeFees,
         academicQualification,

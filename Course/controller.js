@@ -150,9 +150,11 @@ const deleteCourseById = async (req, res, next) => {
 };
 
 const getFeesData = async (req, res) => {
-  const { courseName, courseCategory } = req.body;
+  const { courseName, courseCategory } = req.query;
+  console.log(courseName, courseCategory)
 
   try {
+
     const course = await Course.findOne({ courseName, courseCategory });
     console.log(course);
 
@@ -165,7 +167,8 @@ const getFeesData = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Course fee get successfully",
-      courseFee: course.courseFee,
+      course: course,
+      
     });
   } catch (error) {
     res.status(500).json({
@@ -176,12 +179,12 @@ const getFeesData = async (req, res) => {
 };
 
 const getCourseNames = async (req, res) => {
-  const courseCategory = req.body;
-  console.log(courseCategory);
+  const { courseCategory } = req.query; 
+  console.log("Course Category:", courseCategory);
 
   try {
-    const courses = await Course.find(courseCategory);
-
+    const courses = await Course.find({ courseCategory }); 
+    console.log("Courses found:", courses);
     if (!courses) {
       return res.status(404).json({
         success: false,
