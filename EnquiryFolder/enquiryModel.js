@@ -51,6 +51,9 @@ const EnquirySchema = new Schema({
   referralBy: {
     type: String,
   },
+  counselorName: {
+    type: String,
+  },
   status: {
     type: String,
     default: "Interested",
