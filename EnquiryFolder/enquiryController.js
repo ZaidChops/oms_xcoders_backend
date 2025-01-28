@@ -9,6 +9,7 @@ const enquiry = async (req, res) => {
       email,
       courseName,
       courseCategory,
+      courseDuration,
       courseFee,
       contact,
       finalizeFees,
