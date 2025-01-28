@@ -12,7 +12,7 @@ const courseSchema = new Schema(
       required: [true, "Name is required."],
       trim: true,
     },
-    courseNategory: {
+    courseCategory: {
       type: String,
       enum: [
         "Job Guaranted Program",
