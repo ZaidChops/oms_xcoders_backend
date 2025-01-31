@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const Enquiry = require('./enquiryModel');
+const mongoose = require("mongoose");
+const Enquiry = require("./enquiryModel");
 const Counter = require("../models/counterModel");
 
 const enquiry = async (req, res) => {
@@ -58,7 +58,7 @@ const enquiry = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error saving enquiry:", error); // Log the actual error
+    console.error("Error saving enquiry:", error);
     res.status(500).json({
       success: false,
       message: error.message || "An error occurred while saving the enquiry.",
@@ -116,7 +116,7 @@ const Editenquiry = async (req, res) => {
       enquiry,
     });
   } catch (error) {
-    console.error("Error updating enquiry:", error); // Log the actual error
+    console.error("Error updating enquiry:", error);
     res.status(500).json({
       success: false,
       message: error.message,
@@ -125,20 +125,34 @@ const Editenquiry = async (req, res) => {
 };
 
 const fetchEnquiry = async (req, res) => {
-    try {
-        const enquiry = await Enquiry.find();
-        res.status(200).json({
-            success: true,
-            enquiry
-        });
-    } catch (error) {
-        console.error("Error fetching enquiries:", error); // Log the actual error
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-}
+  try {
+    let { page, limit } = req.query;
+
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 3;
+    const skip = (page - 1) * limit;
+
+    let query = {};
+
+    const enquiries = await Enquiry.find(query).skip(skip).limit(limit);
+    const totalEnquiries = await Enquiry.countDocuments(query);
+
+    res.status(200).json({
+      success: true,
+      data: enquiries,
+      page,
+      limit,
+      totalPages: Math.ceil(totalEnquiries / limit),
+      totalEnquiries,
+    });
+  } catch (error) {
+    console.error("Error fetching enquiries:", error);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   enquiry,
