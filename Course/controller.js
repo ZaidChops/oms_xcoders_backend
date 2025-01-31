@@ -4,20 +4,38 @@ const Counter = require("../models/counterModel.js");
 
 const getAllCourses = async (req, res) => {
   try {
-    const courses = await Course.find({})
 
+    let { page, limit } = req.query;
+
+    page = parseInt(page) || 1;
+    limit = parseInt(limit) || 3;
+    const skip = (page - 1) * limit;
+
+    let query = {};
+
+
+    const courses = await Course.find(query).skip(skip).limit(limit)
+
+const totalCourses = await Course.countDocuments(query);
     return res
       .status(200)
       .json({ success: true, messsage: "Courses fetch ",
-        courses:courses });
+       data:courses,
+      page,
+      limit,
+      totalPages: Math.ceil(totalCourses / limit),
+      totalCourses,
+      });
   } catch (error) {
-    // next(new ErrorHandler(500, "Error occurs while getting courses.", error));
+    
     res.status(500).json({
       success: false,
       message: "wrong",
     });
   }
 };
+
+
 
 const createCourse = async (req, res, next) => {
   try {

@@ -1,40 +1,39 @@
 const { Schema, model } = require("mongoose");
-// const Joi = require("joi");
 
 const TrainerSchema = new Schema(
   {
     trainerId: {
       type: String,
-      unique: true,
       default: "XCT",
     },
-    name: {
+    trainerName: {
       type: String,
       required: [true, "Name is required."],
     },
-    email: {
+    trainerEmail: {
       type: String,
-      required: [true, "Email is required."],
-      unique: [true, "Email must be unique."],
+      required: [true, "Email is required."], // Ensure it's required
+      unique: true, // Keep unique
     },
-    techStack: {
+    trainerTechStack: {
       type: String,
       required: [
         true,
-        "Tech Stack is required, like MERN, MEAN, JAVA Spring boot etc.",
+        "Tech Stack is required, like MERN, MEAN, JAVA Spring Boot, etc.",
       ],
     },
-  
-    contact:{
-type:String,
-      required:true
+    trainerContact: {
+      type: String,
+      required: true,
     },
-
+    trainerJoiningDate: {
+      type: Date,
+      required: [true, "Joining Date is required"],
+    },
   },
   { timestamps: true }
 );
 
 const Trainer = model("Trainer", TrainerSchema);
 
-
-module.exports = { Trainer };
+module.exports = Trainer;
