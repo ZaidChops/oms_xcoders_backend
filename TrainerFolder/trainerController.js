@@ -56,16 +56,6 @@ const createTrainer = async (req, res, next) => {
 
 const getAllTrainers = async (req, res, next) => {
   try {
-    let {page,limit}=req.query
-
-    page = parseInt(page) || 1;
-    limit = parseInt(limit) || 3;
-    const skip = (page - 1) * limit;
-
-    let query = {};
-
-    const trainers=await Trainer.find(query).skip(skip).limit(limit);
-    const totalTrainers=await Trainer.countDocuments(query)
     const trainer = await Trainer.find();
 
     res.status(200).json({
