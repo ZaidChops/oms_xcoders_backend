@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router();
-const { enquiry, Editenquiry, fetchEnquiry } = require('./enquiryController')
+const { enquiry, editEnquiry, fetchEnquiry } = require('./enquiryController')
 router.post('/enquiry-form', enquiry)
 router.get('/list', fetchEnquiry)
-router.put('/:id', Editenquiry);
+router.put('/:id', editEnquiry);
 
 
 module.exports = router

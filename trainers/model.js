@@ -1,5 +1,4 @@
 const { Schema, model } = require("mongoose");
-// const Joi = require("joi");
 
 const TrainerSchema = new Schema(
   {
@@ -8,33 +7,33 @@ const TrainerSchema = new Schema(
       unique: true,
       default: "XCT",
     },
-    name: {
+    trainerName: {
       type: String,
       required: [true, "Name is required."],
     },
-    email: {
+    trainerContact: {
+      type: String,
+      required: [true, "Contact is required."],
+    },
+    trainerEmail: {
       type: String,
       required: [true, "Email is required."],
       unique: [true, "Email must be unique."],
     },
-    techStack: {
+    trainerTechStack: {
       type: String,
       required: [
         true,
         "Tech Stack is required, like MERN, MEAN, JAVA Spring boot etc.",
       ],
     },
-  
-    contact:{
-type:String,
-      required:true
+    trainerJoiningDate: {
+      type: String,
     },
-
   },
   { timestamps: true }
 );
 
 const Trainer = model("Trainer", TrainerSchema);
-
 
 module.exports = { Trainer };

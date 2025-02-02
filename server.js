@@ -12,7 +12,6 @@ const PORT = process.env.PORT || 8100;
 connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 app.use(cors());
 
 app.use("/api/v1", rootRouter)

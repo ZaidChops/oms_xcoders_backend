@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
-const Enquiry = require('./enquiryModel');
+const mongoose = require("mongoose");
+const Enquiry = require("./enquiryModel");
 const Counter = require("../models/counterModel");
+const { pagination } = require("../utils/pagination");
 
 const enquiry = async (req, res) => {
   try {
@@ -66,7 +67,7 @@ const enquiry = async (req, res) => {
   }
 };
 
-const Editenquiry = async (req, res) => {
+const editEnquiry = async (req, res) => {
   try {
     const { id } = req.params;
     const {
@@ -116,7 +117,7 @@ const Editenquiry = async (req, res) => {
       enquiry,
     });
   } catch (error) {
-    console.error("Error updating enquiry:", error); // Log the actual error
+    console.error("Error updating enquiry:", error);
     res.status(500).json({
       success: false,
       message: error.message,
@@ -125,23 +126,27 @@ const Editenquiry = async (req, res) => {
 };
 
 const fetchEnquiry = async (req, res) => {
-    try {
-        const enquiry = await Enquiry.find();
-        res.status(200).json({
-            success: true,
-            enquiry
-        });
-    } catch (error) {
-        console.error("Error fetching enquiries:", error); // Log the actual error
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-}
+  try {
+    // const enquiry = await Enquiry.find();
+    // res.status(200).json({
+    //     success: true, 
+    //     enquiry
+    // });
+    const { page, limit } = req.query;
+    const enquiryData = await pagination(Enquiry, page, limit);
+    
+    return res.status(200).json({ success: true, enquiryData: enquiryData });
+  } catch (error) {
+    console.error("Error fetching enquiries:", error); 
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
 
 module.exports = {
   enquiry,
-  Editenquiry,
+  editEnquiry,
   fetchEnquiry,
 };

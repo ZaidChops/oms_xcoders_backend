@@ -1,5 +1,5 @@
 const Enquiry = require("../EnquiryFolder/enquiryModel.js");
-const { Trainer } = require("../TrainerFolder/trainerModel.js");
+const { Trainer } = require("../trainers/model.js");
 const Admission = require("../AdmissionFolder/admissionModel.js");
 const { Counter } = require("../models/counterModel.js");
 const createHttpError = require("http-errors");

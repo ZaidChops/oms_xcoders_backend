@@ -1,6 +1,5 @@
-const Enquiry = require("../EnquiryFolder/enquiryModel.js");
 
-const pagination = async (Model, page = 1, limit = 5) => {
+const pagination = async (Model, page = 1, limit = 1) => {
   try {
     page < 1 ? 1 : page;
 
@@ -17,25 +16,11 @@ const pagination = async (Model, page = 1, limit = 5) => {
       page,
       limit,
       pages,
-      items,
     };
   } catch (error) {
     console.log(error);
   }
 };
 
-const getPage = async (req, res) => {
-  let { page = 5, limit = 5 } = req.query;
-  const pageNumber = parseInt(page, 10);
-  const limitNumber = parseInt(limit, 10);
 
-  try {
-    const data = await pagination(Enquiry, pageNumber, limitNumber);
-    res.json(data);
-
-  } catch(error) {
-    console.log(error);
-  }
-};
-
-module.exports = { getPage };
+module.exports = { pagination };
