@@ -1,6 +1,6 @@
 const Enquiry = require("../EnquiryFolder/enquiryModel.js");
-const { Trainer } = require("../TrainerFolder/trainerModel.js");
-const Admission = require("../AdmissionFolder/admissionModel.js");
+const { Trainer } = require("../trainers/model.js");
+const Admission = require("../AdmissionFolder/model.js");
 const { Counter } = require("../models/counterModel.js");
 const createHttpError = require("http-errors");
 
@@ -21,7 +21,7 @@ const getDashboardStats = async (req, res, next) => {
     });
 
 
-    const data = await Trainer.find({});
+    // const data = await Trainer.find({});
 
     const totalTrainers = await Counter.findOne({ name: "trainerId" });
     const totalTrainersCount = totalTrainers.seq;

@@ -4,16 +4,21 @@ const TrainerSchema = new Schema(
   {
     trainerId: {
       type: String,
+      unique: true,
       default: "XCT",
     },
     trainerName: {
       type: String,
       required: [true, "Name is required."],
     },
+    trainerContact: {
+      type: String,
+      required: [true, "Contact is required."],
+    },
     trainerEmail: {
       type: String,
-      required: [true, "Email is required."], // Ensure it's required
-      unique: true, // Keep unique
+      required: [true, "Email is required."], 
+      unique: true, 
     },
     trainerTechStack: {
       type: String,
@@ -22,18 +27,12 @@ const TrainerSchema = new Schema(
         "Tech Stack is required, like MERN, MEAN, JAVA Spring Boot, etc.",
       ],
     },
-    trainerContact: {
-      type: String,
-      required: true,
-    },
     trainerJoiningDate: {
-      type: Date,
-      required: [true, "Joining Date is required"],
+      type: String,
     },
   },
   { timestamps: true }
 );
 
 const Trainer = model("Trainer", TrainerSchema);
-
 module.exports = Trainer;

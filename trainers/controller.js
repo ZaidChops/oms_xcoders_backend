@@ -1,27 +1,35 @@
-const Trainer = require("./trainerModel.js");
-const { Counter } = require("../models/counterModel");
+const Trainer  = require("./model.js");
+const { Counter } = require("../models/counterModel.js");
+const { pagination} = require("../utils/pagination.js")
 const createHttpError = require("http-errors");
 
 const createTrainer = async (req, res, next) => {
   try {
     const {
       trainerName,
+      trainerContact,
       trainerEmail,
       trainerTechStack,
-      trainerContact,
       trainerJoiningDate,
     } = req.body;
 
-
-    if (!trainerName || !trainerEmail || !trainerTechStack || !trainerContact || !trainerJoiningDate) {
+    // Validations
+    if (
+      !trainerName ||
+      !trainerContact ||
+      !trainerEmail ||
+      !trainerTechStack ||
+      !trainerJoiningDate
+    ) {
       return res.status(400).json({
-        message: "All fields, including Name, Email, Tech Stack, Contact, and Joining Date, are required.",
+        message:
+          "trainerName, trainerContact, trainerEmail, trainerTechStack, trainerJoiningDate are required",
       });
     }
 
     const existingTrainer = await Trainer.findOne({ trainerEmail });
     if (existingTrainer) {
-      return res.status(400).json({ message: "Trainer with this email already exists." });
+      return next(createHttpError(400, "This trainer is already registered."));
     }
 
     const counter = await Counter.findOneAndUpdate(
@@ -31,43 +39,45 @@ const createTrainer = async (req, res, next) => {
     );
 
     const trainerId = `XCT${String(counter.seq).padStart(3, "0")}`;
-
-   
+console.log(trainerId)
+    // Create the new trainer
     const trainer = new Trainer({
       trainerId,
       trainerName,
-      trainerEmail,
-      trainerTechStack,
       trainerContact,
+      trainerEmail,
+      trainerTechStack,  
       trainerJoiningDate,
     });
-
     await trainer.save();
+
     return res.status(201).json({
       message: "Trainer Created Successfully.",
       success: true,
-      trainer: trainer,
+      trainerData: trainer,
     });
-
   } catch (error) {
-    return next(createHttpError(500, "Error when creating new trainer.", error));
+    return next(
+      createHttpError(500, "Error when creating new trainer.", error)
+    );
   }
 };
 
-const getAllTrainers = async (req, res, next) => {
+const fetchTrainers = async (req, res, next) => {
   try {
-    const trainer = await Trainer.find();
+    const { page, limit } = req.query;
+    const trainersData = await pagination(Trainer, page, limit);
 
     res.status(200).json({
       success: true,
-      trainer: trainer,
+      trainersData: trainersData,
     });
   } catch (error) {
     next(createHttpError(500, "Error fetching trainers.", error));
   }
 };
 
-const updateTrainer = async (req, res, next) => {
+const editTrainer = async (req, res, next) => {
   const { trainerId } = req.params;
   const updates = req.body;
 
@@ -85,12 +95,13 @@ const updateTrainer = async (req, res, next) => {
     res.status(200).json({
       message: "Trainer updated successfully.",
       success: true,
-      trainer: trainer,
+      trainer : trainer,
     });
   } catch (error) {
     next(createHttpError(500, "Error updating trainer.", error));
   }
 };
+
 
 const deleteTrainer = async (req, res, next) => {
   try {
@@ -113,7 +124,7 @@ const deleteTrainer = async (req, res, next) => {
 
 module.exports = {
   createTrainer,
-  getAllTrainers,
-  updateTrainer,
-  deleteTrainer,
+  fetchTrainers,
+  editTrainer,
+  deleteTrainer
 };
