@@ -17,14 +17,14 @@ const TrainerSchema = new Schema(
     },
     trainerEmail: {
       type: String,
-      required: [true, "Email is required."],
-      unique: [true, "Email must be unique."],
+      required: [true, "Email is required."], 
+      unique: true, 
     },
     trainerTechStack: {
       type: String,
       required: [
         true,
-        "Tech Stack is required, like MERN, MEAN, JAVA Spring boot etc.",
+        "Tech Stack is required, like MERN, MEAN, JAVA Spring Boot, etc.",
       ],
     },
     trainerJoiningDate: {
@@ -35,5 +35,4 @@ const TrainerSchema = new Schema(
 );
 
 const Trainer = model("Trainer", TrainerSchema);
-
-module.exports = { Trainer };
+module.exports = Trainer;

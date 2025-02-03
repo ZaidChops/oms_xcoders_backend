@@ -24,8 +24,8 @@ const AdmissionSchema = new Schema(
       type: String,
       required: [true, "Academics are required."],
     },
-    DOB: {
-      type: Date,
+    dateOfBirth: {
+      type: String,
       required: [true, "Date of Birth is requiered."],
     },
     email: {
@@ -60,9 +60,9 @@ const AdmissionSchema = new Schema(
   course: {
       type: String,
     },
-    uploadPhoto: {
-      type: String,
-    },
+    // uploadPhoto: {
+    //   type: String,
+    // },
   },
 
   { timestamps: true }

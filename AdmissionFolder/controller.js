@@ -1,8 +1,9 @@
 const createHttpError = require("http-errors");
 
-const cloudinary = require("../config/cloudinary.js").v2;
-const Admission = require("./admissionModel.js");
+// const cloudinary = require("../config/cloudinary.js").v2;
+const Admission = require("./model.js");
 const { Counter } = require("../models/counterModel.js");
+const { pagination } = require("../utils/pagination.js");
 
 const createAdmission = async (req, res, next) => {
   try {
@@ -11,56 +12,51 @@ const createAdmission = async (req, res, next) => {
       fatherName,
       motherName,
       academics,
-      DOB,
+      dateOfBirth,
       email,
       contact,
-      course,
       marks,
+      course,
       temporaryAddress,
       permanentAddress,
       sourceOfAdmission,
       refrence,
     } = req.body;
 
+    console.log(req.body);
+
+    // Validate required fields
     if (
       !name ||
       !fatherName ||
       !motherName ||
       !academics ||
-      !DOB ||
+      !dateOfBirth ||
       !email ||
       !contact ||
       !marks ||
+      !course ||
       !temporaryAddress ||
       !permanentAddress
     ) {
       return next(createHttpError(400, "All required fields must be filled."));
     }
 
-    // console.log("first")
+    console.log("Checking existing admission...");
     const existingAdmission = await Admission.findOne({ email });
+
     if (existingAdmission) {
       return next(createHttpError(400, "This student is already registered."));
     }
-    // console.log("2")
 
-    if (!req.file) {
-      return next(createHttpError(400, "Upload photo is required."));
-    }
-    // console.log("3")
-
+    // Generate Admission ID
     const counter = await Counter.findOneAndUpdate(
       { name: "admissionId" },
       { $inc: { seq: 1 } },
       { new: true, upsert: true }
     );
-    // console.log("4")
 
     const admissionId = `XCA${String(counter.seq).padStart(3, "0")}`;
-    // console.log("5")
-
-    const uploadPhotoUrl = req.file ? req.file.path : null;
-    // console.log("5")
 
     const newAdmission = new Admission({
       admissionId,
@@ -68,7 +64,7 @@ const createAdmission = async (req, res, next) => {
       fatherName,
       motherName,
       academics,
-      DOB,
+      dateOfBirth,
       email,
       contact,
       marks,
@@ -77,13 +73,10 @@ const createAdmission = async (req, res, next) => {
       permanentAddress,
       sourceOfAdmission,
       refrence,
-      uploadPhoto: uploadPhotoUrl,
     });
-    // console.log("6")
 
     await newAdmission.save();
-    // console.log("7")
-
+    console.log("created successfully");
     res.status(201).json({
       message: "Admission created successfully.",
       success: true,
@@ -94,48 +87,37 @@ const createAdmission = async (req, res, next) => {
   }
 };
 
-
 const allAdmissions = async (req, res, next) => {
   try {
-  
-    const admissions = await Admission.find(); // Fetch all admissions
-    const formattedAdmissions = admissions.map(admission => {
-      // Format DOB to a human-readable string
-      admission.DOB = admission.DOB.toLocaleDateString();
-      return admission;
-    });
-    res.json({ success: true, admissions: formattedAdmissions });
+    const { page, limit } = req.query;
+    const admissionData = await pagination(Admission, page, limit);
+    return res
+      .status(200)
+      .json({ success: true, admissionData: admissionData });
+  } catch (error) {
+    next(createHttpError(500, "Server Error while fetching admissions."));
   }
-  catch (error) {
-    next(createHttpError(500, "Server Error while fetching admissions."))
-  }
-
-
-}
+};
 
 const editAdmission = async (req, res, next) => {
   try {
-    const { id: admissionId } = req.params;
+    const { id } = req.params;
     let updatedData = req.body;
 
-    console.log("Admission ID:", admissionId);
+    // console.log("Admission ID:", admissionId);
     console.log("Updated Data:", updatedData);
 
-    if (req.file) {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "admissions",
-      });
+    // if (req.file) {
+    //   const result = await cloudinary.uploader.upload(req.file.path, {
+    //     folder: "admissions",
+    //   });
 
+    //   // updatedData.uploadPhoto = result.secure_url;
+    // }
 
-      updatedData.uploadPhoto = result.secure_url;
-    }
-
-
-    const admission = await Admission.findOneAndUpdate(
-      { admissionId },
-      updatedData,
-      { new: true }
-    );
+    const admission = await Admission.findByIdAndUpdate(id, updatedData, {
+      new: true,
+    });
 
     if (!admission) {
       return next(createHttpError(404, "Admission not found"));
@@ -151,6 +133,5 @@ const editAdmission = async (req, res, next) => {
     next(createHttpError(500, "Server Error while updating admission"));
   }
 };
-
 
 module.exports = { createAdmission, allAdmissions, editAdmission };

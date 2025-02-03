@@ -1,10 +1,10 @@
 const Course = require("./model.js");
-const Counter = require("../models/counterModel.js");
+const {Counter} = require("../models/counterModel.js");
 const { pagination } = require("../utils/pagination.js");
 
 const getAllCourses = async (req, res) => {
   try {
-    let { page = 1, limit = 10 } = req.query;
+    let { page = 1, limit = 2 } = req.query;
     page = parseInt(page);
     limit = parseInt(limit);
     
@@ -18,6 +18,7 @@ const getAllCourses = async (req, res) => {
         courseData: courseData,
       });
   } catch (error) {
+    // next(new ErrorHandler(500, "Error occurs while getting courses.", error));
     res.status(500).json({
       success: false,
       message: "Error fetching courses",
@@ -25,7 +26,7 @@ const getAllCourses = async (req, res) => {
   }
 };
 
-const createCourse = async (req, res) => {
+const createCourse = async (req, res, next) => {
   try {
     const { courseName, courseCategory, courseDuration, courseFee, courseDiscount } = req.body;
 

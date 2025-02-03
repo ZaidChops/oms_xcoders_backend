@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const enquiryRoute = require("../EnquiryFolder/enquiryRoute.js");
-const admissionRoute = require("../AdmissionFolder/admissionRoute.js");
+const admissionRoute = require("../AdmissionFolder/route.js");
 const trainerRoute = require("../trainers/route.js");
 const dashboardRoute = require("../DashboardFolder/dashboardRoute.js");
 const courseRoute = require("../Course/routes.js");

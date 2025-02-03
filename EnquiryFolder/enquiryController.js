@@ -1,6 +1,5 @@
-const mongoose = require("mongoose");
 const Enquiry = require("./enquiryModel");
-const Counter = require("../models/counterModel");
+const {Counter} = require("../models/counterModel");
 const { pagination } = require("../utils/pagination");
 
 const enquiry = async (req, res) => {
@@ -59,7 +58,7 @@ const enquiry = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error saving enquiry:", error); // Log the actual error
+    console.error("Error saving enquiry:", error);
     res.status(500).json({
       success: false,
       message: error.message || "An error occurred while saving the enquiry.",
@@ -117,6 +116,7 @@ const editEnquiry = async (req, res) => {
       enquiry,
     });
   } catch (error) {
+    console.error("Error updating enquiry:", error);
     console.error("Error updating enquiry:", error);
     res.status(500).json({
       success: false,

@@ -1,4 +1,4 @@
-const { Trainer } = require("./model.js");
+const Trainer  = require("./model.js");
 const { Counter } = require("../models/counterModel.js");
 const { pagination} = require("../utils/pagination.js")
 const createHttpError = require("http-errors");
@@ -32,7 +32,6 @@ const createTrainer = async (req, res, next) => {
       return next(createHttpError(400, "This trainer is already registered."));
     }
 
-    // Get the next sequence for trainerId
     const counter = await Counter.findOneAndUpdate(
       { name: "trainerId" },
       { $inc: { seq: 1 } },
@@ -40,9 +39,9 @@ const createTrainer = async (req, res, next) => {
     );
 
     const trainerId = `XCT${String(counter.seq).padStart(3, "0")}`;
-
+console.log(trainerId)
     // Create the new trainer
-    const trainer = await Trainer.create({
+    const trainer = new Trainer({
       trainerId,
       trainerName,
       trainerContact,
@@ -50,6 +49,7 @@ const createTrainer = async (req, res, next) => {
       trainerTechStack,  
       trainerJoiningDate,
     });
+    await trainer.save();
 
     return res.status(201).json({
       message: "Trainer Created Successfully.",
@@ -95,10 +95,30 @@ const editTrainer = async (req, res, next) => {
     res.status(200).json({
       message: "Trainer updated successfully.",
       success: true,
-      trainer,
+      trainer : trainer,
     });
   } catch (error) {
     next(createHttpError(500, "Error updating trainer.", error));
+  }
+};
+
+
+const deleteTrainer = async (req, res, next) => {
+  try {
+    const { trainerId } = req.params;
+    const trainer = await Trainer.findOneAndDelete({ trainerId });
+    if (!trainer) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Trainer Id not found" });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Trainer deleted successfully.",
+      trainer: trainer,
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
 
@@ -106,4 +126,5 @@ module.exports = {
   createTrainer,
   fetchTrainers,
   editTrainer,
+  deleteTrainer
 };
